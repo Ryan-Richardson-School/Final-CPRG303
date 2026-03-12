@@ -1,6 +1,6 @@
 # Architecture Decision Records
-Project: Orange Minds Trivia App  
-Team: Oranges  
+Project: Brain Fuel Trivia App  
+Team: Orange Minds
 
 Team Members:
 - Anagha Roy
