@@ -1,7 +1,7 @@
 # Orange Minds Trivia App
 
 ## Team
-Team Name: Oranges
+Team Name: Orange Minds
 
 Team Members:
 - Anagha Roy
