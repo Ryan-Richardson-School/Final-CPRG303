@@ -1,0 +1,104 @@
+Project: Orange Minds Trivia App
+Team: Oranges
+Team Members: Anagha Roy, Ryan Richardson, Jasmeen Garcha
+
+ADR 1 – Development Framework
+Context
+The Orange Minds application will be a trivia app designed to run on Android devices. 
+The development framework must allow the team to build a mobile application efficiently while supporting interactive user interfaces and simple navigation between screens.
+The team considered several frameworks including Ionic, Cordova, NativeScript, and React Native.
+
+The framework must:
+- Support Android development
+- Be easy for the team to learn
+- Allow fast user interface development
+- Have strong documentation and community support
+
+Decision
+The team decided to use React Native as the development framework.
+
+Reasoning
+React Native allows developers to build mobile applications using JavaScript and reusable components. 
+It has strong community support and extensive documentation, which makes it easier for the team to learn and implement.
+
+Consequences
+Using React Native allows the team to develop the application more efficiently while maintaining a responsive and modern user interface.
+However, the team will need to learn React Native structure and component-based design during development.
+
+ADR 2 – Navigation Strategy
+Context
+The Orange Minds trivia application will include several screens that allow users to navigate through different features of the app. 
+These screens must be organized in a way that makes navigation simple and intuitive for users.
+
+The application will include the following pages:
+- Home Page
+- Login Page
+- Quiz Page
+- Scores Page
+- Profile Page
+- Account Information Page
+- Settings Page
+- Information Page
+
+Users must be able to easily access the main features of the application while maintaining a clear and logical flow between screens.
+
+Decision
+The team decided to implement Stack Navigation combined with Tab Navigation.
+The Home Page will act as the main entry point to the application. From there, users will be able to navigate to the quiz, scores, and profile sections.
+Tab navigation will allow quick access to the main areas of the application, while stack navigation will allow users to move forward and backward between related screens.
+
+Reasoning
+This navigation structure allows the application to remain organized while still providing quick access to important features. 
+Users will be able to easily navigate between quiz gameplay, score tracking, and profile management.
+Stack navigation is also useful for screens such as login and quiz progression where users move step-by-step through the app.
+
+Consequences
+The Orange Minds app will use a combination of tab and stack navigation to create a clear and user-friendly interface.
+
+ADR 3 – Hardware Integration
+Context
+Mobile devices provide several hardware capabilities such as GPS, cameras, fingerprint scanners, speakers, and vibration motors.
+The Orange Minds trivia application focuses on answering questions and receiving feedback. 
+The team considered whether any hardware features could enhance the user experience without adding unnecessary complexity to the application.
+One feature that could improve the user experience is vibration feedback when users answer questions.
+
+Decision
+The team decided to integrate device vibration feedback into the Orange Minds application.
+
+Reasoning
+Vibration feedback will provide immediate physical feedback when users answer a trivia question.
+
+Examples include:
+
+- A short vibration when an answer is correct
+- A slightly longer vibration when an answer is incorrect
+
+This feature improves the user experience by providing quick feedback without requiring additional visual elements. 
+It also makes the app feel more interactive and responsive.
+Vibration is supported by most Android devices and can be implemented easily using mobile device APIs.
+
+Consequences
+The application will use the Android vibration motor to provide feedback when users answer trivia questions. This enhances the user experience while keeping the implementation simple.
+
+ADR 4 – Data Storage Strategy
+
+Context
+The trivia application needs to store trivia questions, categories, and player scores.
+The team considered the following options:
+- A remote database
+- Local storage
+- Encrypted local storage
+
+A remote database would require internet connectivity and additional backend infrastructure, requiring hosting and will increase development complexity.
+
+Decision
+The team decided to use local storage.
+
+Reasoning
+Local storage allows the application to store trivia questions and player scores directly on the device. 
+This allows the app to function without requiring an internet connection and simplifies development.
+Since the data stored is not sensitive, encryption is not required.
+
+Consequences
+Using local storage allows the trivia app to run offline and simplifies the overall architecture.
+However, trivia questions will need to be packaged with the application when it is built.
