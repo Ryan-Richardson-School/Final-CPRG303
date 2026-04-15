@@ -5,6 +5,8 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 
+
+
 # Expo
 .expo/
 .expo-shared/
@@ -43,6 +45,8 @@ expo-env.d.ts
 .env
 .env.*
 .env*.local
+
+
 
 # macOS
 .DS_Store
