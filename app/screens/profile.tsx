@@ -25,8 +25,8 @@ import type { KeyboardTypeOptions } from "react-native";
 const profileSchema = z.object({
   firstName: z.string().trim().min(3, "First name must be at least 3 characters"),
   lastName: z.string().trim().min(3, "Last name must be at least 3 characters"),
-  email: z.email("Invalid email address"),
-  studentId: z.string().trim().length(9, "Student ID must be exactly 9 characters"),
+  email: z.string().email("Invalid email address"),
+  //studentId: z.string().trim().length(9, "Student ID must be exactly 9 characters"),
   phone: z
     .string()
     .refine(
@@ -57,7 +57,7 @@ export default function Profile() {
       firstName: "",
       lastName: "",
       email: "",
-      studentId: "",
+      //studentId: "",
       phone: "",
     },
   });
@@ -132,9 +132,33 @@ export default function Profile() {
 
   // Save Profile
   const onSubmit = async (data: ProfileForm) => {
-    await storage.set(storage.STORAGE_KEY.PROFILE, data);
-    setHasSavedData(true);
-    setIsEditing(false);
+    try{
+      
+      await storage.set(storage.STORAGE_KEY.PROFILE, data);
+      setHasSavedData(true);
+      setIsEditing(false);
+      // Alert.alert(
+      //   "Success",
+      //   "Your profile has been saved successfully!",
+      //   [
+          
+      //     {
+      //       text:"Okay",
+      //     onPress:()=>{
+      //       router.replace("/(tabs)/settings")
+      //     }
+      //   }
+          
+      //   ]
+      // );
+
+      //router.replace("/(tabs)/settings")
+    }
+    catch(error){
+      Alert.alert("Error", "Failed to save profile data");
+      console.error(error)
+    };
+
   };
 
   const handleCancel = async () => {
@@ -175,6 +199,9 @@ export default function Profile() {
     const values = watch();
     return (
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+        <Pressable onPress={() => router.back()} style={{marginRight:15}}>
+        <Ionicons name ="arrow-back" size={28} color={COLORS.primaryDark} />
+      </Pressable>
         <Text style={styles.h1}>My Profile</Text>
         {renderAvatar()}
 
@@ -198,9 +225,11 @@ export default function Profile() {
   // Edit Profile
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      
       <Pressable onPress={() => router.back()} style={{marginRight:15}}>
         <Ionicons name ="arrow-back" size={28} color={COLORS.primaryDark} />
       </Pressable>
+      
       <Text style={styles.h1}>Edit Profile</Text>
       {renderAvatar()}
 
