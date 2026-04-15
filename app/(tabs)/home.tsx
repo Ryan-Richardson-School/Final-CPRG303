@@ -12,7 +12,9 @@ import { useFocusEffect } from "@react-navigation/native";
 import CategoryCard from "../../components/CategoryCard";
 import StatCard from "../../components/StatCard";
 import { COLORS, SHADOW, SIZES } from "../../constants/theme";
+import * as storage from "../../utils/storage"
 import { getQuizStats, QuizStats, resetQuizStats } from "../../utils/storage";
+
 
 //default 
 const categories = [
@@ -37,11 +39,21 @@ export default function Home() {
   const router = useRouter();
   const [stats, setStats] = useState<QuizStats>(defaultStats);
 
+  const [userName, setUserName] = useState("User"); 
+  const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
+
   //reload
   const loadStats = useCallback(async () => {
     const savedStats = await getQuizStats();
     setStats(savedStats);
+
+    const profile = await storage.get<any>(storage.STORAGE_KEY.PROFILE);
+    if (profile?.firstName) {
+      setUserName(profile.firstName);
+    }
   }, []);
+
+
 
   useFocusEffect(
     useCallback(() => {
@@ -94,7 +106,7 @@ export default function Home() {
 
         <View style={styles.welcomeTextWrap}>
           <Text style={styles.smallText}>Welcome back to Brain Fuel</Text>
-          <Text style={styles.nameText}>John!</Text>
+          <Text style={styles.nameText}>{userName}!</Text>
           <Text style={styles.smallText}>Let&apos;s test your knowledge</Text>
         </View>
       </View>
