@@ -32,20 +32,7 @@ export default function Settings() {
   };
 //logout
   const handleLogout = async () => {
-    Alert.alert("Logout", "Are you sure you want to log out?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Logout",
-        style: "destructive",
-        onPress: async () => {
-          // Clear profile-related storage
-          
-          
-          // Replace current route with login so user cannot go back
-          router.replace("/screens/login"); 
-        },
-      },
-    ]);
+    router.replace("/screens/login");
   };
 
   return (

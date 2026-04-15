@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
+import { View, Text, TextInput, StyleSheet, Pressable, ScrollView } from "react-native";
 import Checkbox from "expo-checkbox";
 import { useRouter } from "expo-router";
 import { COLORS, SIZES } from "../../constants/theme";
@@ -9,47 +9,54 @@ export default function Login() {
   const [remember, setRemember] = useState(false);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Brain Fuel</Text>
-      <Text style={styles.subtitle}>Login</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <Text style={styles.title}>Brain Fuel</Text>
+        <Text style={styles.subtitle}>Login</Text>
 
-      <View style={styles.form}>
-        <TextInput
-          placeholder="Enter email or username"
-          style={styles.input}
-        />
+        <View style={styles.form}>
+          <TextInput
+            placeholder="Enter email or username"
+            style={styles.input}
+          />
 
-        <TextInput
-          placeholder="Enter password"
-          secureTextEntry
-          style={styles.input}
-        />
+          <TextInput
+            placeholder="Enter password"
+            secureTextEntry
+            style={styles.input}
+          />
 
-        <View style={styles.row}>
-          <View style={styles.checkboxRow}>
-            <Checkbox
-              value={remember}
-              onValueChange={setRemember}
-              color={remember ? COLORS.primary : undefined}
-            />
-            <Text style={styles.rememberText}>Remember me</Text>
+          <View style={styles.row}>
+            <View style={styles.checkboxRow}>
+              <Checkbox
+                value={remember}
+                onValueChange={setRemember}
+                color={remember ? COLORS.primary : undefined}
+              />
+              <Text style={styles.rememberText}>Remember me</Text>
+            </View>
+
+            <Text style={styles.link}>Forgot Password?</Text>
           </View>
 
-          <Text style={styles.link}>Forgot Password?</Text>
+          <Pressable style={styles.button} onPress={() => router.replace("/(tabs)/home")}>
+            <Text style={styles.buttonText}>LOGIN</Text>
+          </Pressable>
+
+          <Pressable style={styles.buttonA} onPress={() => router.push("/screens/signup")}>
+            <Text style={styles.buttonText}>Don’t have an account?</Text>
+          </Pressable>
+
+          {/* <Text style={styles.buttonA}>
+          Don’t have an account?{" "}
+          <Text style={styles.link} onPress={() => router.push("/screens/signup")}>
+            Sign up
+          </Text> */}
+
         </View>
-
-        <Pressable style={styles.button} onPress={() => router.push("/home")}>
-          <Text style={styles.buttonText}>LOGIN</Text>
-        </Pressable>
+      
       </View>
-
-      <Text style={styles.signup}>
-        Don’t have an account?{" "}
-        <Text style={styles.link} onPress={() => router.push("/signup")}>
-          Sign up
-        </Text>
-      </Text>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -103,6 +110,14 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: COLORS.primary,
+    padding: 15,
+    borderRadius: SIZES.radius,
+    alignItems: "center",
+    marginTop: 10,
+  },
+
+   buttonA: {
+    backgroundColor: COLORS.category2,
     padding: 15,
     borderRadius: SIZES.radius,
     alignItems: "center",
