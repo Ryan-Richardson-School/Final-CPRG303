@@ -85,6 +85,8 @@ export default function Home() {
           onPress: async () => {
             await resetQuizStats();
             setStats(defaultStats);
+
+        
           },
         },
       ]
@@ -116,9 +118,9 @@ export default function Home() {
         <View style={styles.statsHeaderRow}>
           <Text style={styles.sectionTitle}>Your Stats</Text>
 
-          <Pressable style={styles.resetButton} onPress={handleResetStats}>
+          {/* <Pressable style={styles.resetButton} onPress={handleResetStats}>
             <Text style={styles.resetButtonText}>Reset</Text>
-          </Pressable>
+          </Pressable> */}
         </View>
 
         <View style={styles.statsRow}>
