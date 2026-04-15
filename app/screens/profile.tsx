@@ -26,7 +26,7 @@ const profileSchema = z.object({
   firstName: z.string().trim().min(3, "First name must be at least 3 characters"),
   lastName: z.string().trim().min(3, "Last name must be at least 3 characters"),
   email: z.string().email("Invalid email address"),
-  //studentId: z.string().trim().length(9, "Student ID must be exactly 9 characters"),
+  
   phone: z
     .string()
     .refine(
@@ -141,19 +141,6 @@ export default function Profile() {
         "Success",
         "Your profile has been saved successfully!",
       );
-      //   [
-          
-      //     {
-      //       text:"Okay",
-      //     onPress:()=>{
-      //       router.replace("/(tabs)/settings")
-      //     }
-      //   }
-          
-      //   ]
-      // );
-
-      //router.replace("/(tabs)/settings")
     }
     catch(error){
       Alert.alert("Error", "Failed to save profile data");
@@ -250,12 +237,7 @@ export default function Profile() {
           placeholder: "e.g (403) 555-0123",
           keyboardType: "phone-pad" as KeyboardTypeOptions,
         },
-        // {
-        //   name: "studentId",
-        //   label: "Student ID",
-        //   placeholder: "e.g A001234567",
-        //   maxLength: 9,
-        // },
+        
       ].map((field) => (
         <View key={field.name}>
           <Text style={styles.label}>{field.label}</Text>

@@ -9,7 +9,7 @@ export default function Login() {
   const [remember, setRemember] = useState(false);
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}>
       <View style={styles.container}>
         <Text style={styles.title}>Brain Fuel</Text>
         <Text style={styles.subtitle}>Login</Text>
@@ -46,13 +46,7 @@ export default function Login() {
           <Pressable style={styles.buttonA} onPress={() => router.push("/screens/signup")}>
             <Text style={styles.buttonText}>Don’t have an account?</Text>
           </Pressable>
-
-          {/* <Text style={styles.buttonA}>
-          Don’t have an account?{" "}
-          <Text style={styles.link} onPress={() => router.push("/screens/signup")}>
-            Sign up
-          </Text> */}
-
+          
         </View>
       
       </View>
@@ -65,7 +59,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
     padding: 20,
-    paddingTop: 130,
+    justifyContent: "center",
   },
   title: {
     fontSize: 36,

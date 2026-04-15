@@ -8,7 +8,7 @@ export default function Signup() {
   const [agree, setAgree] = useState(false);
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}>
 
       <View style={styles.container}>
         <Text style={styles.title}>Brain Fuel</Text>
@@ -51,13 +51,6 @@ export default function Signup() {
 
         </View>
     
-
-       {/* <Text style={styles.login}>
-        Already have an account?{" "}
-        <Text style={styles.link} onPress={() => router.push("/screens/login")}>
-          Login
-        </Text>
-      </Text>  */}
     </View>
 </ScrollView>
   );
@@ -70,7 +63,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
     padding: 20,
     justifyContent: "flex-start",
-    paddingTop: 130, 
   },
   title: {
     fontSize: 36,

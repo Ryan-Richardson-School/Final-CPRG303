@@ -52,7 +52,7 @@ export default function Scores() {
     return(
         <ScrollView style={styles.container} contentContainerStyle={styles.content}>
 
-            <Text style={styles.headerText}>Overal Rank</Text>
+            <Text style={styles.headerText}>Overall Rank</Text>
             <Text style={styles.subHeaderText}>Your Cumulative Total</Text>
 
 
