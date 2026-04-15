@@ -12,6 +12,12 @@ export type QuizStats = {
   lastPlayedDate: string | null;
 };
 
+export const STORAGE_KEY = {
+  PROFILE: "brainFuelProfile",
+  PROFILE_PHOTO: "brainFuelProfilePhoto",
+};
+
+
 const defaultStats: QuizStats = {
   totalCompleted: 0,
   totalCorrect: 0,
@@ -101,5 +107,23 @@ export async function resetQuizStats(): Promise<void> {
     await AsyncStorage.removeItem(QUIZ_STATS_KEY);
   } catch (error) {
     console.error("Error resetting quiz stats:", error);
+  }
+}
+
+export async function get<T>(key: string): Promise<T | null> {
+  try {
+    const value = await AsyncStorage.getItem(key);
+    return value ? (JSON.parse(value) as T) : null;
+  } catch (error) {
+    console.error("Storage GET error:", error);
+    return null;
+  }
+}
+
+export async function set(key: string, value: any): Promise<void> {
+  try {
+    await AsyncStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.error("Storage SET error:", error);
   }
 }
