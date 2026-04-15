@@ -137,9 +137,10 @@ export default function Profile() {
       await storage.set(storage.STORAGE_KEY.PROFILE, data);
       setHasSavedData(true);
       setIsEditing(false);
-      // Alert.alert(
-      //   "Success",
-      //   "Your profile has been saved successfully!",
+      Alert.alert(
+        "Success",
+        "Your profile has been saved successfully!",
+      );
       //   [
           
       //     {
@@ -156,8 +157,8 @@ export default function Profile() {
     }
     catch(error){
       Alert.alert("Error", "Failed to save profile data");
-      console.error(error)
-    };
+      console.error(error);
+    }
 
   };
 
@@ -199,7 +200,7 @@ export default function Profile() {
     const values = watch();
     return (
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        <Pressable onPress={() => router.back()} style={{marginRight:15}}>
+        <Pressable onPress={() => router.replace("(tabs)/settings")}  style={{marginRight:15}}>
         <Ionicons name ="arrow-back" size={28} color={COLORS.primaryDark} />
       </Pressable>
         <Text style={styles.h1}>My Profile</Text>
@@ -226,7 +227,7 @@ export default function Profile() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       
-      <Pressable onPress={() => router.back()} style={{marginRight:15}}>
+      <Pressable onPress={() => router.replace("(tabs)/settings")} style={{marginRight:15}}>
         <Ionicons name ="arrow-back" size={28} color={COLORS.primaryDark} />
       </Pressable>
       
