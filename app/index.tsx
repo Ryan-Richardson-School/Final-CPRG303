@@ -14,7 +14,11 @@ const Index = () => {
     );
   }
 
-  return <Redirect href="/screens/signup" />;
+  return  session ?(
+  <Redirect href="/(tabs)/home"/>
+  ):(
+  <Redirect href="/screens/signup" />
+  );
 };
 
 export default Index;

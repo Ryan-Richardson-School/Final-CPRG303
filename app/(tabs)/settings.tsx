@@ -14,6 +14,7 @@ import { COLORS, SIZES, SHADOW } from "../../constants/theme";
 import * as storage from "../../utils/storage";
 import * as Linking from "expo-linking";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { supabase } from "../../utils/supabase";
 
 export default function Settings() {
   const router = useRouter();
@@ -32,8 +33,14 @@ export default function Settings() {
   };
 //logout
   const handleLogout = async () => {
+  const { error } = await supabase.auth.signOut();
+  
+  if (error) {
+    console.error("Logout error:", error.message);
+  } else {
     router.replace("/screens/login");
-  };
+  }
+};
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>

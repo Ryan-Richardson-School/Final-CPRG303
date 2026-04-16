@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import {
   ActivityIndicator,
@@ -21,10 +19,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../context/AuthContext";
 import { COLORS, SIZES } from "../../constants/theme";
 
-// ─────────────────────────────────────────────
 // Validation Schema
-// ─────────────────────────────────────────────
-
 const loginSchema = z.object({
   email: z.string().trim().email("Please enter a valid email address."),
   password: z.string().min(8, "Password must be at least 8 characters."),
@@ -32,10 +27,7 @@ const loginSchema = z.object({
 
 type LoginForm = z.infer<typeof loginSchema>;
 
-// ─────────────────────────────────────────────
 // Component
-// ─────────────────────────────────────────────
-
 export default function Login() {
   const { signIn } = useAuth();
   const [remember, setRemember] = useState(false);
@@ -53,21 +45,18 @@ export default function Login() {
   });
 
   const onSubmit = async (data: LoginForm) => {
-  try {
-    setAuthError(null);
-    setIsSubmitting(true);
-
-    await signIn(data.email, data.password);
-
-    router.replace("/(tabs)/home");   // ⭐ REQUIRED
-  } catch (e) {
-    setAuthError(
-      e instanceof Error ? e.message : "Login failed. Please try again."
-    );
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+    try {
+      setAuthError(null);
+      setIsSubmitting(true);
+      await signIn(data.email, data.password);
+    } catch (e) {
+      setAuthError(
+        e instanceof Error ? e.message : "Login failed. Please try again.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -156,6 +145,7 @@ export default function Login() {
           {/* Login Button */}
           <Pressable
             style={[styles.button, isSubmitting && styles.buttonDisabled]}
+            //onPress={() => router.push("/(tabs)/home")}
             onPress={handleSubmit(onSubmit)}
             disabled={isSubmitting}
           >
@@ -179,10 +169,7 @@ export default function Login() {
   );
 }
 
-// ─────────────────────────────────────────────
 // Styles
-// ─────────────────────────────────────────────
-
 const styles = StyleSheet.create({
   title: {
     fontSize: 36,
