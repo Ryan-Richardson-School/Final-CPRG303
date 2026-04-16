@@ -1,16 +1,13 @@
-
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "../utils/supabase";
-import { email } from "zod";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 type AuthContextType = {
-  session: Session | null; // null = not signed in
-  user: User | null; // shortcut for session?.user
-  isLoading: boolean; // true while loading session from storage
+  session: Session | null;
+  user: User | null;
+  isLoading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -23,12 +20,10 @@ const AuthContext = createContext<AuthContextType | null>(null);
 // ── Provider ──────────────────────────────────────────────────────────────────
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
- 
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    
     supabase.auth
       .getSession()
       .then(({ data: { session } }) => {
@@ -44,7 +39,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setSession(session);
     });
 
-    
     return () => subscription.unsubscribe();
   }, []);
 
@@ -53,32 +47,32 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       email,
       password,
     });
+
     if (error) throw error;
-    
   };
 
   const signUp = async (email: string, password: string) => {
-  const { data, error } = await supabase.auth.signUp({ email, password });
-  if (error) throw error;
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) throw error;
 
-  setSession(data.session); 
+    setSession(data.session);
 
-  const user = data.user;
-  if (!user) return; 
+    const user = data.user;
+    if (!user) return;
 
-  await supabase.from("profiles").insert({
-    id: user.id,
-    email: user.email,
-    first_name: "",
-    last_name: "",
-    phone_number: ""
-  });
-};
+    await supabase.from("profiles").insert({
+      id: user.id,
+      email: user.email,
+      first_name: "",
+      last_name: "",
+      phone_number: "",
+    });
+  };
 
-
+  // sign out only ends the session
+  // local data stays separated by user id in storage.ts
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
-    await AsyncStorage.clear(); // Clear AsyncStorage on sign out
     if (error) throw error;
   };
 

@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-const QUIZ_STATS_KEY = "brainFuelQuizStats";
+import { supabase } from "./supabase";
 
 // information storage so you can keep track of your progress
 export type QuizStats = {
@@ -11,12 +10,6 @@ export type QuizStats = {
   streak: number;
   lastPlayedDate: string | null;
 };
-
-export const STORAGE_KEY = {
-  PROFILE: "brainFuelProfile",
-  PROFILE_PHOTO: "brainFuelProfilePhoto",
-};
-
 
 const defaultStats: QuizStats = {
   totalCompleted: 0,
@@ -37,9 +30,40 @@ function getYesterdayDate(): string {
   return date.toISOString().split("T")[0];
 }
 
+async function getCurrentUserId(): Promise<string | null> {
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    return null;
+  }
+
+  return user.id;
+}
+
+function getUserScopedKey(baseKey: string, userId: string): string {
+  return `${baseKey}:${userId}`;
+}
+
+export const STORAGE_KEY = {
+  PROFILE: "brainFuelProfile",
+  PROFILE_PHOTO: "brainFuelProfilePhoto",
+  QUIZ_STATS: "brainFuelQuizStats",
+};
+
 export async function getQuizStats(): Promise<QuizStats> {
   try {
-    const savedStats = await AsyncStorage.getItem(QUIZ_STATS_KEY);
+    const userId = await getCurrentUserId();
+
+    if (!userId) {
+      return defaultStats;
+    }
+
+    const savedStats = await AsyncStorage.getItem(
+      getUserScopedKey(STORAGE_KEY.QUIZ_STATS, userId)
+    );
 
     if (!savedStats) {
       return defaultStats;
@@ -67,6 +91,13 @@ export async function saveQuizResult(
   answeredQuestions: number
 ): Promise<void> {
   try {
+    const userId = await getCurrentUserId();
+
+    if (!userId) {
+      console.error("No logged in user found. Stats were not saved.");
+      return;
+    }
+
     const currentStats = await getQuizStats();
     const currentBest = currentStats.bestScores[category] ?? 0;
 
@@ -76,7 +107,7 @@ export async function saveQuizResult(
     let newStreak = currentStats.streak;
 
     if (currentStats.lastPlayedDate === today) {
-      // same day → no change
+      // same day, streak stays the same
     } else if (currentStats.lastPlayedDate === yesterday) {
       newStreak += 1;
     } else {
@@ -96,7 +127,10 @@ export async function saveQuizResult(
       lastPlayedDate: today,
     };
 
-    await AsyncStorage.setItem(QUIZ_STATS_KEY, JSON.stringify(updatedStats));
+    await AsyncStorage.setItem(
+      getUserScopedKey(STORAGE_KEY.QUIZ_STATS, userId),
+      JSON.stringify(updatedStats)
+    );
   } catch (error) {
     console.error("Error saving quiz result:", error);
   }
@@ -104,7 +138,15 @@ export async function saveQuizResult(
 
 export async function resetQuizStats(): Promise<void> {
   try {
-    await AsyncStorage.removeItem(QUIZ_STATS_KEY);
+    const userId = await getCurrentUserId();
+
+    if (!userId) {
+      return;
+    }
+
+    await AsyncStorage.removeItem(
+      getUserScopedKey(STORAGE_KEY.QUIZ_STATS, userId)
+    );
   } catch (error) {
     console.error("Error resetting quiz stats:", error);
   }
@@ -112,7 +154,13 @@ export async function resetQuizStats(): Promise<void> {
 
 export async function get<T>(key: string): Promise<T | null> {
   try {
-    const value = await AsyncStorage.getItem(key);
+    const userId = await getCurrentUserId();
+
+    if (!userId) {
+      return null;
+    }
+
+    const value = await AsyncStorage.getItem(getUserScopedKey(key, userId));
     return value ? (JSON.parse(value) as T) : null;
   } catch (error) {
     console.error("Storage GET error:", error);
@@ -122,7 +170,16 @@ export async function get<T>(key: string): Promise<T | null> {
 
 export async function set(key: string, value: any): Promise<void> {
   try {
-    await AsyncStorage.setItem(key, JSON.stringify(value));
+    const userId = await getCurrentUserId();
+
+    if (!userId) {
+      return;
+    }
+
+    await AsyncStorage.setItem(
+      getUserScopedKey(key, userId),
+      JSON.stringify(value)
+    );
   } catch (error) {
     console.error("Storage SET error:", error);
   }
