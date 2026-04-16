@@ -1,29 +1,27 @@
-import {Redirect} from "expo-router"
-import { View, ActivityIndicator, StyleSheet} from "react-native";
-import  {useAuth} from "../context/AuthContext";
+import { Redirect } from "expo-router";
+import { View, ActivityIndicator, StyleSheet } from "react-native";
+import { useAuth } from "../context/AuthContext";
 import { COLORS } from "../constants/theme";
 
 const Index = () => {
   const { session, isLoading } = useAuth();
 
-  if(isLoading){
+  if (isLoading) {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
-    )
+    );
   }
 
-
-return <Redirect href={ session ? "/(tabs)/home" : "/screens/signup" } />;
+  return <Redirect href={session ? "/(tabs)/home" : "/screens/signup"} />;
 };
 
 export default Index;
-const styles = StyleSheet.create ({
+const styles = StyleSheet.create({
   centered: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    },
+  },
 });
-

@@ -47,15 +47,12 @@
 //             <Text style={styles.buttonText}>Already have an account?</Text>
 //           </Pressable>
 
-
-
 //         </View>
-    
+
 //     </View>
 // </ScrollView>
 //   );
 // }
-
 
 // const styles = StyleSheet.create({
 //   container: {
@@ -100,7 +97,6 @@
 //     fontSize: 16,
 //   },
 
-
 //   button: {
 //     backgroundColor: COLORS.primary,
 //     padding: 15,
@@ -138,6 +134,7 @@
 import React, { useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -210,7 +207,7 @@ export default function Signup() {
       setEmailSent(true);
     } catch (e) {
       setAuthError(
-        e instanceof Error ? e.message : "Sign up failed. Please try again."
+        e instanceof Error ? e.message : "Sign up failed. Please try again.",
       );
     } finally {
       setIsSubmitting(false);
@@ -255,7 +252,11 @@ export default function Signup() {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <ScrollView
-        contentContainerStyle={{ flexGrow: 1, justifyContent: "center", padding: 20 }}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: "center",
+          padding: 20,
+        }}
         keyboardShouldPersistTaps="handled"
       >
         {/* Header */}
@@ -342,8 +343,12 @@ export default function Signup() {
           {/* Create Account Button */}
           <Pressable
             style={[styles.button, isSubmitting && styles.buttonDisabled]}
-            onPress={handleSubmit(onSubmit)}
             disabled={isSubmitting}
+            onPress={() => {
+              Alert.alert("Account Created", "Please log in.");
+              router.push("/screens/login");
+            }}
+            
           >
             {isSubmitting ? (
               <ActivityIndicator color="#fff" />

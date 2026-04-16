@@ -17,13 +17,14 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "../utils/supabase";
 import { email } from "zod";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 type AuthContextType = {
-  session: Session | null;         // null = not signed in
-  user: User | null;               // shortcut for session?.user
-  isLoading: boolean;              // true while loading session from storage
+  session: Session | null; // null = not signed in
+  user: User | null; // shortcut for session?.user
+  isLoading: boolean; // true while loading session from storage
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -43,36 +44,43 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     // 1. Check if there's an active session on mount
     // 2. Listen for auth state changes and update session accordingly
-    supabase.auth.getSession()
-      .then(({data : {session}})=>{
+    supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => {
         setSession(session);
       })
-      .finally(()=>{
+      .finally(() => {
         setIsLoading(false);
-      })
-
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-        setSession(session);
       });
-      
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
     // Cleanup subscription on unmount
-    return () => subscription.unsubscribe()
+    return () => subscription.unsubscribe();
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
     if (error) throw error;
-  }
+  };
 
   const signUp = async (email: string, password: string) => {
     const { error } = await supabase.auth.signUp({ email, password });
     if (error) throw error;
-  }
+  };
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
+    await AsyncStorage.clear(); // Clear AsyncStorage on sign out
     if (error) throw error;
-  }
+  };
 
   return (
     <AuthContext.Provider
