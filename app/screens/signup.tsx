@@ -1,135 +1,4 @@
-// import { useState } from "react";
-// import { View, Text, TextInput, StyleSheet, Pressable,ScrollView, KeyboardAvoidingView } from "react-native";
-// import { useRouter } from "expo-router";
-// import { COLORS, SIZES } from "../../constants/theme";
 
-// export default function Signup() {
-//   const router = useRouter();
-//   const [agree, setAgree] = useState(false);
-
-//   return (
-//     <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}>
-
-//       <View style={styles.container}>
-//         <Text style={styles.title}>Brain Fuel</Text>
-//         <Text style={styles.subtitle}>Sign Up</Text>
-
-//         {/* White box container */}
-//         <View style={styles.formBox}>
-//           <TextInput
-//             placeholder="Username"
-//             style={styles.input}
-//           />
-
-//           <TextInput
-//             placeholder="Email"
-//             style={styles.input}
-//             autoCapitalize="none"
-//           />
-
-//           <TextInput
-//             placeholder="Password"
-//             secureTextEntry
-//             style={styles.input}
-//           />
-
-//           <Pressable
-//             style={styles.button}
-//             onPress={() => router.push("/home")}
-//           >
-//             <Text style={styles.buttonText}>CREATE ACCOUNT</Text>
-//           </Pressable>
-
-//           <Pressable
-//             style={styles.buttonA}
-//             onPress={() => router.push("/screens/login")}
-//           >
-//             <Text style={styles.buttonText}>Already have an account?</Text>
-//           </Pressable>
-
-//         </View>
-
-//     </View>
-// </ScrollView>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: COLORS.background,
-//     padding: 20,
-//     justifyContent: "flex-start",
-//   },
-//   title: {
-//     fontSize: 36,
-//     textAlign: "center",
-//     fontWeight: "bold",
-//     marginBottom: 50,
-//   },
-//   subtitle: {
-//     fontSize: 24,
-//     textAlign: "center",
-//     marginBottom: 30,
-//     color:"#292828",
-//   },
-
-//   formBox: {
-//     backgroundColor: COLORS.white,
-//     padding: 20,
-//     borderRadius: SIZES.radius,
-//     width: "100%",
-//     maxWidth: 380,
-//     alignSelf: "center",
-//     marginTop: 10,
-//     elevation: 3,
-//     shadowColor: "#000",
-//     shadowOpacity: 0.1,
-//     shadowRadius: 6,
-//     shadowOffset: { width: 0, height: 3 },
-//   },
-
-//   input: {
-//     backgroundColor:"#F2F2F2",
-//     borderRadius: SIZES.radius,
-//     padding: 15,
-//     marginBottom: 15,
-//     fontSize: 16,
-//   },
-
-//   button: {
-//     backgroundColor: COLORS.primary,
-//     padding: 15,
-//     borderRadius: SIZES.radius,
-//     alignItems: "center",
-//     marginTop: 10,
-//   },
-
-//   buttonA: {
-//     backgroundColor: COLORS.category2,
-//     padding: 15,
-//     borderRadius: SIZES.radius,
-//     alignItems: "center",
-//     marginTop: 10,
-//   },
-//   buttonText: {
-//     fontSize: 18,
-//     fontWeight: "bold",
-//   },
-
-//   login: {
-//     textAlign: "center",
-//     marginTop: 20,
-//     fontSize: 16,
-//   },
-//   link: {
-//     color: COLORS.accent,
-//     fontWeight: "bold",
-//   },
-// });
-
-// app/screens/signup.tsx
-// Brain Fuel — Signup Screen (Instructor Week 12 Format + Brain Fuel UI)
 
 import React, { useState } from "react";
 import {
@@ -153,7 +22,7 @@ import { useAuth } from "../../context/AuthContext";
 import { COLORS, SIZES } from "../../constants/theme";
 
 // ─────────────────────────────────────────────
-// Validation Schema (Instructor Format)
+// Validation Schema 
 // ─────────────────────────────────────────────
 
 const signUpSchema = z
@@ -202,9 +71,9 @@ export default function Signup() {
 
       await signUp(data.email, data.password);
 
-      // If email confirmation is ON → show success screen
-      // If OFF → AuthContext will redirect automatically
-      setEmailSent(true);
+      Alert.alert("Account Created", "You can now log in.");
+router.replace("/screens/login");
+
     } catch (e) {
       setAuthError(
         e instanceof Error ? e.message : "Sign up failed. Please try again.",
@@ -215,7 +84,7 @@ export default function Signup() {
   };
 
   // ─────────────────────────────────────────────
-  // Success Screen (Instructor Format)
+  // Success Screen 
   // ─────────────────────────────────────────────
 
   if (emailSent) {
@@ -344,11 +213,7 @@ export default function Signup() {
           <Pressable
             style={[styles.button, isSubmitting && styles.buttonDisabled]}
             disabled={isSubmitting}
-            onPress={() => {
-              Alert.alert("Account Created", "Please log in.");
-              router.push("/screens/login");
-            }}
-            
+            onPress={handleSubmit(onSubmit)}
           >
             {isSubmitting ? (
               <ActivityIndicator color="#fff" />
@@ -356,6 +221,7 @@ export default function Signup() {
               <Text style={styles.buttonText}>CREATE ACCOUNT</Text>
             )}
           </Pressable>
+
 
           {/* Login Link */}
           <Pressable

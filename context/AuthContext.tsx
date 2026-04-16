@@ -1,18 +1,4 @@
-// Week 12: Supabase Auth — NEW file
-// ─────────────────────────────────────────────────────────────────────────────
-// AuthContext — shares auth state (session, user) across the entire app.
-//
-// Pattern:
-//   1. AuthProvider wraps the entire app in _layout.tsx
-//   2. Any screen calls useAuth() to read session/user or call signIn/signUp/signOut
-//   3. The session state is the single source of truth — set by Supabase's listener
-//
-// Why Context API?
-//   Auth state is needed everywhere: the tab navigator needs to know if the
-//   user is logged in. The home screen shows the user's email. The settings
-//   screen has a logout button. Passing this through props would be a nightmare.
-//   Context gives every component access without prop drilling.
-// ─────────────────────────────────────────────────────────────────────────────
+
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "../utils/supabase";
@@ -37,13 +23,12 @@ const AuthContext = createContext<AuthContextType | null>(null);
 // ── Provider ──────────────────────────────────────────────────────────────────
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  // Week 12 - Class Code: replace these placeholders with real state + effects
+ 
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // 1. Check if there's an active session on mount
-    // 2. Listen for auth state changes and update session accordingly
+    
     supabase.auth
       .getSession()
       .then(({ data: { session } }) => {
@@ -59,7 +44,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setSession(session);
     });
 
-    // Cleanup subscription on unmount
+    
     return () => subscription.unsubscribe();
   }, []);
 
@@ -69,12 +54,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       password,
     });
     if (error) throw error;
+    
   };
 
   const signUp = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({ email, password });
-    if (error) throw error;
-  };
+  const { data, error } = await supabase.auth.signUp({ email, password });
+  if (error) throw error;
+
+  setSession(data.session); 
+
+  const user = data.user;
+  if (!user) return; 
+
+  await supabase.from("profiles").insert({
+    id: user.id,
+    email: user.email,
+    first_name: "",
+    last_name: "",
+    phone_number: ""
+  });
+};
+
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
@@ -98,10 +98,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// ── Hook ──────────────────────────────────────────────────────────────────────
-
-// useAuth() — call this from any screen to read auth state or trigger auth actions.
-// Throws if called outside of <AuthProvider> — a hard error is better than silent null.
+// Hook
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

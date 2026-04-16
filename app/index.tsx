@@ -14,7 +14,7 @@ const Index = () => {
     );
   }
 
-  return <Redirect href={session ? "/(tabs)/home" : "/screens/signup"} />;
+  return <Redirect href="/screens/signup" />;
 };
 
 export default Index;

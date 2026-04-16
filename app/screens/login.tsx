@@ -1,147 +1,4 @@
-// import { useState } from "react";
-// import { View, Text, TextInput, StyleSheet, Pressable, ScrollView } from "react-native";
-// import Checkbox from "expo-checkbox";
-// import { useRouter } from "expo-router";
-// import { COLORS, SIZES } from "../../constants/theme";
-// import { z } from "zod";
 
-// const loginSchema = z.object({
-//   email: z.string().trim().email("Please enter a valid email address."),
-//   password: z.string().min(8, "Password must be at least 8 characters."),
-// });
-
-// type LoginForm = z.infer<typeof loginSchema>;
-
-// export default function Login() {
-//   const router = useRouter();
-//   const [remember, setRemember] = useState(false);
-
-//   return (
-//     <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}>
-//       <View style={styles.container}>
-//         <Text style={styles.title}>Brain Fuel</Text>
-//         <Text style={styles.subtitle}>Login</Text>
-
-//         <View style={styles.form}>
-//           <TextInput
-//             placeholder="Enter email or username"
-//             style={styles.input}
-//           />
-
-//           <TextInput
-//             placeholder="Enter password"
-//             secureTextEntry
-//             style={styles.input}
-//           />
-
-//           <View style={styles.row}>
-//             <View style={styles.checkboxRow}>
-//               <Checkbox
-//                 value={remember}
-//                 onValueChange={setRemember}
-//                 color={remember ? COLORS.primary : undefined}
-//               />
-//               <Text style={styles.rememberText}>Remember me</Text>
-//             </View>
-
-//             <Text style={styles.link}>Forgot Password?</Text>
-//           </View>
-
-//           <Pressable style={styles.button} onPress={() => router.replace("/(tabs)/home")}>
-//             <Text style={styles.buttonText}>LOGIN</Text>
-//           </Pressable>
-
-//           <Pressable style={styles.buttonA} onPress={() => router.push("/screens/signup")}>
-//             <Text style={styles.buttonText}>Don’t have an account?</Text>
-//           </Pressable>
-
-//         </View>
-
-//       </View>
-//     </ScrollView>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: COLORS.background,
-//     padding: 20,
-//     justifyContent: "center",
-//   },
-//   title: {
-//     fontSize: 36,
-//     textAlign: "center",
-//     fontWeight: "bold",
-//     marginBottom: 50,
-//   },
-//   subtitle: {
-//     fontSize: 24,
-//     textAlign: "center",
-//     marginBottom: 30,
-//   },
-//   form: {
-//     backgroundColor: COLORS.white,
-//     padding: 20,
-//     borderRadius: SIZES.radius,
-//     elevation: 3,
-//     shadowColor: "#000",
-//     shadowOpacity: 0.1,
-//     shadowRadius: 6,
-//     shadowOffset: { width: 0, height: 3 },
-//   },
-//   input: {
-//     backgroundColor: "#F2F2F2",
-//     borderRadius: SIZES.radius,
-//     padding: 15,
-//     marginBottom: 15,
-//     fontSize: 16,
-//   },
-//   row: {
-//     flexDirection: "row",
-//     justifyContent: "space-between",
-//     alignItems: "center",
-//     marginBottom: 15,
-//   },
-//   checkboxRow: {
-//     flexDirection: "row",
-//     alignItems: "center",
-//   },
-//   rememberText: {
-//     marginLeft: 8,
-//   },
-//   button: {
-//     backgroundColor: COLORS.primary,
-//     padding: 15,
-//     borderRadius: SIZES.radius,
-//     alignItems: "center",
-//     marginTop: 10,
-//   },
-
-//    buttonA: {
-//     backgroundColor: COLORS.category2,
-//     padding: 15,
-//     borderRadius: SIZES.radius,
-//     alignItems: "center",
-//     marginTop: 10,
-//   },
-//   buttonText: {
-//     fontSize: 18,
-//     fontWeight: "bold",
-//   },
-//   signup: {
-//     textAlign: "center",
-//     marginTop: 20,
-//     fontSize: 16,
-//   },
-//   link: {
-//     color: COLORS.accent,
-//     fontWeight: "bold",
-//   },
-// });
-
-// app/screens/login.tsx
-// Brain Fuel — Login Screen (Updated to Week 12 Supabase Auth Format)
 
 import React, { useState } from "react";
 import {
@@ -196,19 +53,21 @@ export default function Login() {
   });
 
   const onSubmit = async (data: LoginForm) => {
-    try {
-      setAuthError(null);
-      setIsSubmitting(true);
-      await signIn(data.email, data.password);
-      // AuthContext will redirect automatically
-    } catch (e) {
-      setAuthError(
-        e instanceof Error ? e.message : "Login failed. Please try again.",
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  try {
+    setAuthError(null);
+    setIsSubmitting(true);
+
+    await signIn(data.email, data.password);
+
+    router.replace("/(tabs)/home");   // ⭐ REQUIRED
+  } catch (e) {
+    setAuthError(
+      e instanceof Error ? e.message : "Login failed. Please try again."
+    );
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <KeyboardAvoidingView
@@ -297,7 +156,7 @@ export default function Login() {
           {/* Login Button */}
           <Pressable
             style={[styles.button, isSubmitting && styles.buttonDisabled]}
-            onPress={() => router.push("/(tabs)/home")}
+            onPress={handleSubmit(onSubmit)}
             disabled={isSubmitting}
           >
             {isSubmitting ? (
